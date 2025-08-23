@@ -1,103 +1,141 @@
+"use client";
 import Image from "next/image";
+import { useCart } from "./context/CartContext";
+import { useState, useEffect } from "react";
+import { useSwipeable } from "react-swipeable"; // ✅ import here
+import { motion } from "framer-motion";
 
-export default function Home() {
+// --------------------
+// Mobile Products Component (swipeable carousel)
+// --------------------
+function MobileProductsView({ products, addToCart }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // swipe gestures only (no auto-slide)
+  const handlers = useSwipeable({
+    onSwipedLeft: () => setActiveIndex((prev) => (prev + 1) % products.length),
+    onSwipedRight: () =>
+      setActiveIndex((prev) => (prev - 1 + products.length) % products.length),
+    trackMouse: true, // drag with mouse on desktop too
+  });
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="md:hidden">
+      <div {...handlers} className="relative w-full overflow-hidden rounded-xl">
+        <div
+          className="flex transition-transform duration-500 ease-in-out"
+          style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+        >
+          {products.map((product) => (
+            <div key={product.id} className="w-full flex-shrink-0 p-4">
+              <div className="bg-white rounded-xl shadow-lg p-4 h-full flex flex-col">
+                <div className="relative h-56 w-full">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    className="object-cover rounded-lg"
+                  />
+                </div>
+                <div className="mt-4 flex-grow">
+                  <h4 className="font-semibold text-lg">{product.name}</h4>
+                  <p className="text-gray-600">{product.price}</p>
+                </div>
+                <button
+                  onClick={() => addToCart(product)}
+                  className="mt-3 px-4 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition w-full"
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+      </div>
+
+      {/* dots */}
+      <div className="flex justify-center mt-4 space-x-2">
+        {products.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setActiveIndex(index)}
+            className={`w-3 h-3 rounded-full ${
+              index === activeIndex ? "bg-black" : "bg-gray-300"
+            }`}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        ))}
+      </div>
     </div>
+  );
+}
+
+// --------------------
+// Desktop Products Component (grid layout)
+// --------------------
+function DesktopProductsView({ products, addToCart }) {
+  return (
+    <div className="hidden md:grid grid-cols-3 lg:grid-cols-4 gap-8">
+      {products.map((product) => (
+        <div
+          key={product.id}
+          className="bg-white rounded-xl shadow-lg p-4 flex flex-col"
+        >
+          <div className="relative h-56 w-full">
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              className="object-cover rounded-lg"
+            />
+          </div>
+          <div className="mt-4 flex-grow">
+            <h4 className="font-semibold text-lg">{product.name}</h4>
+            <p className="text-gray-600">{product.price}</p>
+          </div>
+          <button
+            onClick={() => addToCart(product)}
+            className="mt-3 px-4 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition w-full"
+          >
+            Add to Cart
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// --------------------
+// Home Page
+// --------------------
+export default function Home() {
+  const { addToCart } = useCart();
+
+  const products = [
+    { id: 1, name: "Oversized Shirt", price: "₹2499", image: "/shirt1.jpg" },
+    { id: 2, name: "Graphic T-shirt", price: "₹1499", image: "/tshirt1.jpg" },
+    { id: 3, name: "Hoodie", price: "₹3499", image: "/hoodie1.jpg" },
+    { id: 4, name: "Cargo Trousers", price: "₹2999", image: "/trousers1.jpg" },
+    { id: 5, name: "Cap", price: "₹999", image: "/cap1.jpg" },
+    { id: 6, name: "Bracelet", price: "₹799", image: "/bracelet1.jpg" },
+  ];
+
+  return (
+    <main className="bg-white text-black min-h-screen px-4 py-8 md:px-10 md:py-16">
+      <section className="h-[50vh] md:h-[70vh] flex items-center justify-center bg-gray-100 text-center rounded-xl mb-12 mt-12">
+        <h2 className="text-4xl md:text-6xl lg:text-8xl font-extrabold tracking-wide px-4">
+          &quot;Born in the grind. Raised in the streets. Built for the bold.&quot; 
+        </h2>
+      </section>
+
+      <h1 className="text-3xl md:text-4xl font-bold mb-8 md:mb-10 text-center md:text-left">
+        Featured Products
+      </h1>
+
+      {/* Mobile View (carousel) */}
+      <MobileProductsView products={products} addToCart={addToCart} />
+
+      {/* Desktop View (grid) */}
+      <DesktopProductsView products={products} addToCart={addToCart} />
+    </main>
   );
 }

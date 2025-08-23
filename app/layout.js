@@ -1,6 +1,6 @@
 import "./globals.css";
-import { CartProvider } from "./context/CartContext";
-import Navbar from "./Components/Navbar";
+import { CartProvider } from "@/app/context/CartContext";
+import Navbar from "@/app/Components/Navbar";
 
 export default function RootLayout({ children }) {
   return (

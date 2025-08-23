@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useCart } from "../context/CartContext";
+import { useCart } from "@/app/context/CartContext";
 import { useState, useEffect } from "react";
 import { useSwipeable } from "react-swipeable"; // ✅ import here
 import { motion } from "framer-motion";

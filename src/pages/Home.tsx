@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { Link } from "react-router-dom"
 import products from "../data/product"
 import ProductCard from "../components/cards/ProductCard"
 
@@ -50,7 +51,21 @@ export default function Home() {
       ],
       image: "https://images.unsplash.com/photo-1520975594082-2eec6191b24c",
     },
-  ]
+  ] as const
+
+  // Map category display name -> actual route path
+  const pathFor = (name: typeof categories[number]["name"]) => {
+    switch (name) {
+      case "Menswear":
+        return "/menswear"
+      case "Womenswear":
+        return "/womenswear"
+      case "Accessories":
+        return "/accessories"
+      default:
+        return "/"
+    }
+  }
 
   return (
     <>
@@ -79,9 +94,11 @@ export default function Home() {
                 Shop by Category
               </h2>
             </div>
-            <a href="#" className="hidden sm:inline-block text-sm uppercase hover:opacity-70">
+
+            {/* View All → send to Menswear (or change to a dedicated /designers or /catalog route later) */}
+            <Link to="/menswear" className="hidden sm:inline-block text-sm uppercase hover:opacity-70">
               View All
-            </a>
+            </Link>
           </div>
 
           <div className="mt-12 grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8">
@@ -90,18 +107,14 @@ export default function Home() {
               const isWomens = c.name.toLowerCase() === "womenswear"
               const isAcc = c.name.toLowerCase() === "accessories"
 
-              const wrapperClass = isMens
-                ? "md:col-span-7"
-                : isWomens
-                ? "md:col-span-5"
-                : "md:col-span-12"
-
+              const wrapperClass = isMens ? "md:col-span-7" : isWomens ? "md:col-span-5" : "md:col-span-12"
               const heightClass = isAcc ? "h-64 sm:h-72" : "h-[480px] lg:h-[560px]"
+              const to = pathFor(c.name)
 
               return (
-                <a
+                <Link
                   key={c.id}
-                  href="#"
+                  to={to}
                   className={[
                     "group relative overflow-hidden rounded-3xl border border-black/10 bg-white shadow-sm transition-shadow",
                     "hover:shadow-2xl hover:shadow-black/10",
@@ -116,11 +129,7 @@ export default function Home() {
                     decoding="async"
                     loading="lazy"
                     onError={onImgError}
-                    className={[
-                      "block w-full object-cover transition-transform duration-700",
-                      heightClass,
-                      "group-hover:scale-[1.04]",
-                    ].join(" ")}
+                    className={["block w-full object-cover transition-transform duration-700", heightClass, "group-hover:scale-[1.04]"].join(" ")}
                   />
 
                   {/* gradient veil */}
@@ -152,10 +161,7 @@ export default function Home() {
 
                     {/* CTA — underlined, editorial */}
                     <div className="mt-8">
-                      <a
-                        href="#"
-                        className="group inline-flex items-center gap-3 border-b border-white/50 text-white text-sm uppercase tracking-[0.2em] pb-1 transition-colors hover:border-white"
-                      >
+                      <span className="pointer-events-none group inline-flex items-center gap-3 border-b border-white/50 text-white text-sm uppercase tracking-[0.2em] pb-1">
                         Shop {c.name}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -165,10 +171,10 @@ export default function Home() {
                         >
                           <path d="M7 4l6 6-6 6" fill="currentColor" />
                         </svg>
-                      </a>
+                      </span>
                     </div>
                   </div>
-                </a>
+                </Link>
               )
             })}
           </div>
@@ -200,12 +206,12 @@ export default function Home() {
               Each collection is curated to bring authenticity, craftsmanship, and bold attitude.
             </p>
             <div className="mt-8">
-              <a
-                href="#"
+              <Link
+                to="/designers"
                 className="inline-flex items-center rounded-full bg-black text-white px-6 py-3 text-sm uppercase hover:opacity-90"
               >
                 Explore Designers
-              </a>
+              </Link>
             </div>
           </div>
         </div>

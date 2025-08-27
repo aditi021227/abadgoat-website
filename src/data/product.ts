@@ -1,5 +1,3 @@
-// src/data/products.ts
-
 export type Category = "Menswear" | "Womenswear" | "Accessories"
 export type Subcategory =
   | "Shirts / T-Shirts"

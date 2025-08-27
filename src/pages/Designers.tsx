@@ -1,5 +1,3 @@
-import React from "react"
-
 const withParams = (url: string, w = 1600) =>
   url.includes("?") ? `${url}&auto=format&fit=crop&w=${w}&q=80` : `${url}?auto=format&fit=crop&w=${w}&q=80`
 

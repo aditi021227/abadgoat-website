@@ -18,9 +18,9 @@ export type Product = {
   brand: string
   price: number
   image: string
-  category: Category
   subcategory: Subcategory
   tag?: string
+  category?: string
 }
 
 // --- Mock catalog split by your 3 categories ---

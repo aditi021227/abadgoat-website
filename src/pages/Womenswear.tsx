@@ -1,5 +1,4 @@
 // src/pages/Womenswear.tsx
-import React from "react"
 import products from "../data/product"
 import type { Product } from "../data/product"
 import ProductCard from "../components/cards/ProductCard"

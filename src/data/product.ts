@@ -21,6 +21,7 @@ export type Product = {
   subcategory: Subcategory
   tag?: string
   category?: string
+  description?: string; 
 }
 
 // --- Mock catalog split by your 3 categories ---
